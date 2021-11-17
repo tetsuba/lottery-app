@@ -1,0 +1,23 @@
+{
+  "name": "lottery-contract",
+  "version": "1.0.0",
+  "description": "Ethereum lottery contract ",
+  "type": "module",
+  "main": "compile.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "deploy": "node -r dotenv/config deploy.js",
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.6.0",
+    "dotenv": "^10.0.0",
+    "mocha": "^9.1.3",
+    "solc": "^0.8.10",
+    "web3": "^1.6.0"
+  }
+}
