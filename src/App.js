@@ -1,25 +1,42 @@
-import logo from './logo.svg';
 import './App.css';
+import { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// SCREENS
+import LotteryScreen from './Screens/LotteryScreen';
+import NoAccessScreen from './Screens/NoAccessScreen';
+
+// ETHEREUM CONTRACT
+import LotteryContract from './Contract/lottery';
+
+export default class App extends Component {
+
+  state = {
+    view: 'default',
+    ethereum: false,
+    metaMaskMessage: ''
+  }
+
+  async componentDidMount() {
+    const contract = await LotteryContract();
+    if (contract) {
+      this.setState({
+        view: 'ethereum',
+        lotteryContract: contract,
+      })
+    } else {
+      this.setState({
+        metaMaskMessage: 'Please set up a metamask wallet',
+      })
+    }
+  }
+
+  render() {
+    switch(this.state.view) {
+      case 'ethereum':
+        return <LotteryScreen lotteryContract={this.state.lotteryContract} />
+      default:
+        return <NoAccessScreen />
+    }
+  }
 }
 
-export default App;

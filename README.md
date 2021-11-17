@@ -1,4 +1,28 @@
-# Getting Started with Create React App
+NOTE: Crate-react-app does not run with node 17.0.0 for now.
+
+
+
+# Lottery 
+
+Basic lottery game using a metamask wallet, Ethereum and Rinkeby test network
+
+
+Description how to play........
+
+
+Tech stack used .......
+create-react-app
+Web3
+
+
+yarn commands....
+
+
+Should I add the contract code here?
+
+
+# Lottery Contract
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
