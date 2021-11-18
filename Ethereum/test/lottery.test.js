@@ -1,7 +1,7 @@
 import assert from 'assert'
 import Web3 from 'web3'
 
-
+// TODO: make sure tests are working
 import contracts from '../compile.js'
 
 let accounts

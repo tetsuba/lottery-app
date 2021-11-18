@@ -26,6 +26,6 @@ const init = async function() {
     console.log(contract.abi)
     console.log('Contract deployed to', result.options.address)
     console.log('Manager Address: ', accounts[0])
-  provider.engine.stop();
+    provider.engine.stop();
 }
 init()
