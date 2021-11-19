@@ -1,43 +1,9 @@
 import assert from 'assert'
-import Web3 from 'web3'
-
-// TODO: make sure tests are working
-import contracts from '../compile.js'
+import deploy from '../deploy.js'
 
 let accounts
-let contract
 let lottery
 let web3
-
-before(async () => {
-  try {
-    web3 = new Web3('ws://localhost:7545');
-    accounts = await web3.eth.getAccounts()
-    contract = await contracts['Lottery.sol']['Lottery']
-
-    // Deploy contract to ganache server
-    lottery = await new web3.eth
-      .Contract(contract.abi)
-      .deploy({
-        data: contract.evm.bytecode.object.toString(),
-      })
-      .send({
-        from: accounts[0],
-        gas: 1000000
-      })
-      .on('error', (e) => {
-        console.log('error', e)
-      })
-
-  } catch (e) {
-    console.log('***********************')
-    console.log('***********************')
-    console.log('Please run Ganache app!')
-    console.log('***********************')
-    console.log('***********************')
-    console.log(e)
-  }
-})
 
 async function enterPlayer(index, amount) {
   await lottery.methods.enter().send({
@@ -47,6 +13,24 @@ async function enterPlayer(index, amount) {
 }
 
 describe('Lottery', () => {
+  before(async () => {
+    try {
+      const data = await deploy()
+      accounts = data.accounts
+      lottery = data.lottery
+      web3 = data.web3
+
+    } catch (e) {
+      console.log('***********************')
+      console.log('***********************')
+      console.log('Please run Ganache app!')
+      console.log('***********************')
+      console.log('***********************')
+      console.log(e)
+    }
+  })
+
+
   it('deploys a contract',  () => {
     assert.ok(lottery.options.address)
   })
