@@ -1,52 +1,38 @@
 import assert from 'assert'
-import Web3 from 'web3'
-
-// TODO: make sure tests are working
-import contracts from '../compile.js'
+import deploy from '../deploy.js'
 
 let accounts
-let contract
 let lottery
 let web3
 
-before(async () => {
-  try {
-    web3 = new Web3('ws://localhost:7545');
-    accounts = await web3.eth.getAccounts()
-    contract = await contracts['Lottery.sol']['Lottery']
-
-    // Deploy contract to ganache server
-    lottery = await new web3.eth
-      .Contract(contract.abi)
-      .deploy({
-        data: contract.evm.bytecode.object.toString(),
-      })
-      .send({
-        from: accounts[0],
-        gas: 1000000
-      })
-      .on('error', (e) => {
-        console.log('error', e)
-      })
-
-  } catch (e) {
-    console.log('***********************')
-    console.log('***********************')
-    console.log('Please run Ganache app!')
-    console.log('***********************')
-    console.log('***********************')
-    console.log(e)
-  }
-})
-
 async function enterPlayer(index, amount) {
-  await lottery.methods.enter().send({
+  return lottery.methods.enter().send({
     from: accounts[index],
     value: web3.utils.toWei(amount, 'ether')
   })
 }
 
 describe('Lottery', () => {
+  before(async () => {
+    try {
+      const data = await deploy()
+      accounts = data.accounts
+      lottery = data.lottery
+      web3 = data.web3
+
+    } catch (e) {
+      console.log('**********************************************')
+      console.log('**********************************************')
+      console.log('')
+      console.log('Please run Ganache app!')
+      console.log('')
+      console.log('**********************************************')
+      console.log('**********************************************')
+      console.log(e)
+    }
+  })
+
+
   it('deploys a contract',  () => {
     assert.ok(lottery.options.address)
   })
@@ -65,39 +51,52 @@ describe('Lottery', () => {
     assert.equal(3, players.length)
   })
 
-  it('requires a minimum amount of ether to enter', async () => {
-    try {
-      await enterPlayer(0, '0.001')
-      assert(false)
-    } catch(e) {
-      assert(e)
-    }
-
-  })
-
-  // TODO: rework test to test error and success
-  it('only manager can call pickWinner', async () => {
-
-    const data = await lottery.methods.pickWinner().send({
-      from: accounts[0],
+  describe('Requires a minimum of 0.01 ether to enter',() => {
+    it('should fail if the amount is less', async () => {
+      try {
+        await enterPlayer(0, '0.001')
+      } catch (e) {
+        assert.equal(e.data.name, 'RuntimeError')
+      }
     })
 
-    assert(data.status == true, 'Only manager account can pick a winner')
+    it('should add a player if the amount is more', async () => {
+      const player = await enterPlayer(0, '0.1')
+      assert.equal(player.status, true)
+    })
   })
 
-  it('sends money to the winner and resets the players array', async () => {
-    await enterPlayer(0, '2')
+  describe('Only a manager can call pick winner function', () => {
 
-    const initialBalance = await web3.eth.getBalance(accounts[0])
-
-    const data = await lottery.methods.pickWinner().send({
-      from: accounts[0],
+    before(async () => {
+      // To test pick winner properly it is required to remove all players from the
+      // lottery using the pickWinner function. Maybe a reset function should be implemented.
+      await lottery.methods.pickWinner().send({
+        from: accounts[0],
+      })
     })
 
-    const finalBalance = await web3.eth.getBalance(accounts[0])
+    it('fails if it is not the manager', async () => {
+      try {
+        await lottery.methods.pickWinner().send({
+          from: accounts[1],
+        })
+      } catch (e) {
+        assert.equal(e.data.name, 'RuntimeError')
+      }
+    })
 
-    const difference = finalBalance - initialBalance
+    it('sends money to the winner and resets the players array', async () => {
+      await enterPlayer(0, '2')
+      const initialBalance = await web3.eth.getBalance(accounts[0])
+      await lottery.methods.pickWinner().send({
+        from: accounts[0],
+      })
 
-    assert(difference > web3.utils.toWei('1.8', 'ether'))
+      const finalBalance = await web3.eth.getBalance(accounts[0])
+      const difference = finalBalance - initialBalance
+
+      assert(difference > web3.utils.toWei('1.8', 'ether'))
+    })
   })
 })

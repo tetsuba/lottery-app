@@ -14,3 +14,5 @@ ReactDOM.render(
 // TODO: Add type script to project
 // TODO: Add more tests to Ethereum contract
 // TODO: Add lottery interface
+// TODO: eslint
+// TODO: type script

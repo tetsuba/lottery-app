@@ -13,12 +13,13 @@ Simple lottery game using ethereum smart contracts.
 
 
 ##Available Scripts
-
+Scripts are supported with env-cmd package. Using the --environments option to read the .env-cmdrc file
+https://github.com/toddbluhm/env-cmd#readme
 
 ###npm test
-Make sure all is green before deploying to the network.
+Before running any tests. It is required to install and run ganache app. Ganache app sets up an ethereum blockchain environment to execute commands, and inspect state while controlling how the chain operates. 
 
-Note: (Maybe I should create another script to test and deploy.)
+Ganache - https://www.trufflesuite.com/ganache
 
 ###npm deploy
 Deploys contract to the Rinkeby network.

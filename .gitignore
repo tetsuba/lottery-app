@@ -24,5 +24,5 @@ yarn-error.log*
 
 
 # Ethereum
-Ethereum/.env
+Ethereum/.env-cmdrc
 Ethereum/node_modules
