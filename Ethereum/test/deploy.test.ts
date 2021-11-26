@@ -1,5 +1,5 @@
-import assert from 'assert'
-import deploy, { getProvider } from '../deploy.js'
+import * as assert from 'assert'
+import deploy, { getProvider } from '../deploy'
 
 describe('deploy', () => {
 
@@ -13,6 +13,7 @@ describe('deploy', () => {
       })
 
     describe('running in a production environment', () => {
+      // @ts-ignore
       before(() => {
         process.env.RINKEBY = 'true'
       })

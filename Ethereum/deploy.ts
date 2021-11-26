@@ -1,44 +1,29 @@
+// @ts-ignore
 import HDWalletProvider from '@truffle/hdwallet-provider'
 import Web3 from 'web3'
-import { lotteryContract } from './compile.js'
+import { lotteryContract } from './compile'
+import Env from './env'
+import { print } from "./utils"
+import { AbstractProvider } from "web3-core"
 
-function getENV() {
-  return {
-    /* Used for testing */
-    TEST: !!process.env.TEST,
-    GANACHE_URL: process.env.GANACHE_URL,
-
-    /* Used for deploying a contract */
-    RINKEBY: !!process.env.RINKEBY,
-    RINKEBY_KEY: process.env.RINKEBY_KEY,
-    RINKEBY_URL: process.env.RINKEBY_URL
-  }
-}
-
-function log(lottery, accounts) {
-  console.log(lotteryContract.abi)
-  console.log('Contract deployed to', lottery.options.address)
-  console.log('Manager Address: ', accounts[0])
-}
-
-export function getProvider () {
-  const ENV = getENV()
+export function getProvider (): AbstractProvider | string {
+  const env = Env()
   switch (true) {
-    case ENV.RINKEBY:
-      return (ENV.RINKEBY_KEY && ENV.RINKEBY_URL)
-        ? new HDWalletProvider(ENV.RINKEBY_KEY, ENV.RINKEBY_URL)
+    case env.RINKEBY:
+      return (env.RINKEBY_KEY && env.RINKEBY_URL)
+        ? new HDWalletProvider(env.RINKEBY_KEY, env.RINKEBY_URL)
         : 'Rinkeby test success'
     default: // ENV.TEST
-      return ENV.GANACHE_URL
+      return env.GANACHE_URL
   }
 }
 
+// deploy only returns a value for testing
 export default async function deploy() {
-  const ENV = getENV()
+  const env = Env()
   const provider = getProvider()
   const web3 = new Web3(provider)
   const accounts = await web3.eth.getAccounts()
-
   const lottery = await new web3.eth
     .Contract(lotteryContract.abi)
     .deploy({
@@ -49,12 +34,21 @@ export default async function deploy() {
       gas: 1000000
     })
 
+
   // Log data if deploying to Rinkeby network
-  if (ENV.RINKEBY) log(lottery, accounts)
+  if (env.RINKEBY) {
+    const printData = [
+      lotteryContract.abi,
+      'Contract deployed to', lottery.options.address,
+      'Manager Address: ', accounts[0]
+    ]
+    print(printData, false)
+  }
 
   // Return data if testing deploy
-  if (ENV.TEST) return { lottery, accounts, web3 }
+  if (env.TEST) return ({ lottery, accounts, web3 })
 
+  // @ts-ignore
   provider.engine.stop();
 }
 

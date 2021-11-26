@@ -2,7 +2,7 @@ import './App.css';
 import { Component } from 'react';
 
 // SCREENS
-import LotteryScreen from './Screens/LotteryScreen';
+import LotteryScreen from "./Screens/LotteryScreen";
 import NoAccessScreen from './Screens/NoAccessScreen';
 
 // ETHEREUM CONTRACT
@@ -12,8 +12,8 @@ export default class App extends Component {
 
   state = {
     view: 'default',
-    ethereum: false,
-    metaMaskMessage: ''
+    metaMaskMessage: '',
+    lotteryContract: null,
   }
 
   async componentDidMount() {

@@ -1,7 +1,11 @@
 import { Component } from 'react';
 import Header from '../Components/Header/Header';
 
-export default class LotteryScreen extends Component {
+type LotteryScreenProps = {
+  lotteryContract: any;
+}
+
+export default class LotteryScreen extends Component<LotteryScreenProps> {
 
   async componentDidMount() {
     const { lotteryContract } = this.props
