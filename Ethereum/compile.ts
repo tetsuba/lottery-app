@@ -1,5 +1,6 @@
-import path from 'path'
-import fs from 'fs'
+import * as path from 'path'
+import * as fs from 'fs'
+// @ts-ignore
 import solc from 'solc'
 
 const contractPath = path.resolve('contracts', 'Lottery.sol')

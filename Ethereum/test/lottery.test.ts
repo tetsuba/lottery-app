@@ -1,37 +1,41 @@
-import assert from 'assert'
-import deploy from '../deploy.js'
+import * as assert from 'assert'
+import types from 'web3'
+import { Contract } from 'web3-eth-contract'
+import deploy from '../deploy'
+import { print } from "../utils";
 
-let accounts
-let lottery
-let web3
+let accounts: string[]
+let lottery: Contract
+let web3: types
 
-async function enterPlayer(index, amount) {
+async function enterPlayer(index: number, amount: string) {
   return lottery.methods.enter().send({
     from: accounts[index],
     value: web3.utils.toWei(amount, 'ether')
   })
 }
 
+type DeployTypes = {
+  accounts: string[],
+  lottery: any,
+  web3: any,
+}
+
 describe('Lottery', () => {
+  // @ts-ignore
   before(async () => {
     try {
-      const data = await deploy()
-      accounts = data.accounts
-      lottery = data.lottery
-      web3 = data.web3
-
+      const data: DeployTypes | undefined = await deploy()
+      if (data) {
+        accounts = data.accounts
+        lottery = data.lottery
+        web3 = data.web3
+      }
     } catch (e) {
-      console.log('**********************************************')
-      console.log('**********************************************')
-      console.log('')
-      console.log('Please run Ganache app!')
-      console.log('')
-      console.log('**********************************************')
-      console.log('**********************************************')
-      console.log(e)
+      const list = ['Please run Ganache app!!!!']
+      print(list, true)
     }
   })
-
 
   it('deploys a contract',  () => {
     assert.ok(lottery.options.address)
@@ -55,7 +59,7 @@ describe('Lottery', () => {
     it('should fail if the amount is less', async () => {
       try {
         await enterPlayer(0, '0.001')
-      } catch (e) {
+      } catch (e: any) {
         assert.equal(e.data.name, 'RuntimeError')
       }
     })
@@ -68,6 +72,7 @@ describe('Lottery', () => {
 
   describe('Only a manager can call pick winner function', () => {
 
+    // @ts-ignore
     before(async () => {
       // To test pick winner properly it is required to remove all players from the
       // lottery using the pickWinner function. Maybe a reset function should be implemented.
@@ -82,6 +87,7 @@ describe('Lottery', () => {
           from: accounts[1],
         })
       } catch (e) {
+        // @ts-ignore
         assert.equal(e.data.name, 'RuntimeError')
       }
     })
@@ -94,9 +100,9 @@ describe('Lottery', () => {
       })
 
       const finalBalance = await web3.eth.getBalance(accounts[0])
-      const difference = finalBalance - initialBalance
+      const difference = +finalBalance - +initialBalance
 
-      assert(difference > web3.utils.toWei('1.8', 'ether'))
+      assert.equal(difference > +web3.utils.toWei('1.8', 'ether'), true)
     })
   })
 })

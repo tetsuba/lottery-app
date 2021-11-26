@@ -2,23 +2,28 @@
   "name": "lottery-contract",
   "version": "1.0.0",
   "description": "Ethereum lottery contract ",
-  "type": "module",
-  "main": "deploy.js",
+  "type": "commonjs",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "deploy": "env-cmd -e production node deploy.js",
+    "env-test": "env-cmd -e test",
+    "env-deploy": "env-cmd -e deploy",
+    "test": "npm run env-test mocha --exit",
     "predeploy": "npm test",
-    "test": "env-cmd -e test mocha --exit"
+    "deploy": "env-deploy ts-node deploy.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.6.0",
     "env-cmd": "^10.1.0",
-    "mocha": "^9.1.3",
     "solc": "^0.8.10",
     "web3": "^1.6.0"
+  },
+  "devDependencies": {
+    "mocha": "^9.1.3",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
   }
 }

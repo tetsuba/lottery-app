@@ -1,7 +1,7 @@
 import detectEthereumProvider from '@metamask/detect-provider'
 import Web3 from 'web3'
 
-export const CONTRACT_ABI = [
+const CONTRACT_ABI: any[] = [
   {
     "inputs": [],
     "name": "enter",
@@ -70,13 +70,14 @@ export const CONTRACT_ABI = [
 
 export const CONTRACT_ADDRESS = '0x4882aaF6E8961D5A7D8f9Cd01D4AC86A9a1b1D4f'
 
-async function LotteryContract() {
+async function LotteryContract(): Promise<any> {
   const provider = await detectEthereumProvider();
   if (provider) {
+    // @ts-ignore
     const web3 = new Web3(window.ethereum)
     return new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS)
   } else {
-    return null
+    return undefined
   }
 }
 

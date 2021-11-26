@@ -1,7 +1,6 @@
 # Ethereum Lottery Contract
 
-Simple lottery game using ethereum smart contracts. 
-
+Created a simple lottery game using solidity
 
 ###How the lottery works
 - A player must have a metamask wallet and a minimum of 0.2 ETH to enter the lottery
@@ -10,6 +9,18 @@ Simple lottery game using ethereum smart contracts.
 
 - The winner of the lottery will receive all the ETH entered
 
+### Deploying Contract
+Using these technologies to compile and deploy contract to Ethereum network:
+
+- solc
+- Typescript
+- ts-node
+- web3
+- @truffle/hdwallet-provider
+
+
+###Testing
+- Mocha
 
 
 ##Available Scripts
