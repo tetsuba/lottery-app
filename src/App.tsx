@@ -7,25 +7,22 @@ import NoAccessScreen from './Screens/NoAccessScreen';
 
 // ETHEREUM CONTRACT
 import LotteryContract from './Contract/lottery';
+import detectEthereumProvider from "@metamask/detect-provider";
 
 export default class App extends Component {
 
   state = {
     view: 'default',
-    metaMaskMessage: '',
     lotteryContract: null,
   }
 
   async componentDidMount() {
-    const contract = await LotteryContract();
-    if (contract) {
+
+    const provider = await detectEthereumProvider()
+    if (provider) {
       this.setState({
         view: 'ethereum',
-        lotteryContract: contract,
-      })
-    } else {
-      this.setState({
-        metaMaskMessage: 'Please set up a metamask wallet',
+        lotteryContract: new LotteryContract(window.ethereum),
       })
     }
   }
@@ -39,4 +36,3 @@ export default class App extends Component {
     }
   }
 }
-
