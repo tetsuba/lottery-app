@@ -9,14 +9,13 @@ export default class LotteryScreen extends Component<LotteryScreenProps> {
 
   async componentDidMount() {
     const { lotteryContract } = this.props
-    const manager = await lotteryContract.methods.manager().call()
+    console.log(lotteryContract.contractAbi)
+    const manager = await lotteryContract.getManager()
+    const players = await lotteryContract.getPlayers()
+    const balance = await lotteryContract.getBalance()
     console.log('manager:', manager)
-    //
-    // console.log(lottery)
-
-    // web3.eth.requestAccounts().then((accounts) => {
-    //   console.log(accounts)
-    // })
+    console.log('players:', players)
+    console.log('balance:', balance)
   }
 
   render() {

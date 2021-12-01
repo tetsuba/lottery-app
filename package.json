@@ -41,5 +41,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@depay/web3-blockchains": "^3.0.0",
+    "@depay/web3-mock": "^9.1.1",
+    "ethers": "^5.5.1"
   }
 }
