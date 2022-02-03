@@ -12,8 +12,8 @@ import detectEthereumProvider from "@metamask/detect-provider";
 export default class App extends Component {
 
   state = {
-    view: 'default',
-    lotteryContract: null,
+    blockchain: 'default',
+    lotteryContract: undefined,
   }
 
   async componentDidMount() {
@@ -21,16 +21,16 @@ export default class App extends Component {
     const provider = await detectEthereumProvider()
     if (provider) {
       this.setState({
-        view: 'ethereum',
+        blockchain: 'ethereum',
         lotteryContract: new LotteryContract(window.ethereum),
       })
     }
   }
 
   render() {
-    switch(this.state.view) {
+    switch(this.state.blockchain) {
       case 'ethereum':
-        return <LotteryScreen lotteryContract={this.state.lotteryContract} />
+        return <LotteryScreen lotteryContract={this.state.lotteryContract} blockchain={this.state.blockchain} />
       default:
         return <NoAccessScreen />
     }
