@@ -28,6 +28,7 @@ export default async function deploy() {
     .Contract(lotteryContract.abi)
     .deploy({
       data: lotteryContract.evm.bytecode.object.toString(),
+      arguments: ['Rinkeby']
     })
     .send({
       from: accounts[0],

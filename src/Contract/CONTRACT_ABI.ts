@@ -16,7 +16,13 @@ const CONTRACT_ABI: AbiItem[] | AbiItem = [
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_network",
+        "type": "string"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -47,6 +53,19 @@ const CONTRACT_ABI: AbiItem[] | AbiItem = [
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "network",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -68,3 +87,5 @@ const CONTRACT_ABI: AbiItem[] | AbiItem = [
 ]
 
 export default CONTRACT_ABI
+
+

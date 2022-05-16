@@ -34,13 +34,95 @@ section {
   padding: 10px;
 }
 
-.checkmark {
+.row {
+  /*border-bottom: #CCC solid 1px;*/
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.check-mark {
   display: inline-block;
+  transform: rotate(45deg) translate(-10px, 0);
+  height: 20px;
+  width: 10px;
+  border-bottom: 5px solid #78b13f;
+  border-right: 5px solid #78b13f;
+}
+
+.cross-mark {
+  height: 28px;
+  width: 28px;
+  position: relative;
+}
+
+.cross-mark:before, .cross-mark:after {
+  height: 28px;
+  width: 4px;
+  background-color: red;
+  display: block;
+  content: '';
+  transform-origin: center;
+
+  position: absolute;
+  left: 12px;
+  top: 0px;
+}
+
+.cross-mark:before {
   transform: rotate(45deg);
-  height: 25px;
-  width: 12px;
-  margin-left: 60%;
-  border-bottom: 7px solid #78b13f;
-  border-right: 7px solid #78b13f;
+}
+.cross-mark:after {
+  transform: rotate(-45deg);
+}
+
+/*.cross-mark:after {*/
+/*  height: 20px;*/
+/*  width: 5px;*/
+/*  background-color: red;*/
+/*  display: block;*/
+/*  content: '';*/
+/*  transform: rotate(-45deg);*/
+/*}*/
+
+.loading-container {
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  color: red;
 }
 

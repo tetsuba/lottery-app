@@ -4,11 +4,13 @@ pragma solidity ^0.8.10;
 
 contract Lottery {
 
+    string public network;
     address public manager;
     address payable[] public players;
 
-    constructor() {
+    constructor(string memory _network) {
         manager = msg.sender;
+        network = _network;
     }
 
     function enter() public payable {

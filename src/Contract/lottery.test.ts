@@ -96,8 +96,6 @@ describe('lottery', () => {
 
         const contract = new LotteryContract(window.ethereum)
 
-        console.log(contract.enter)
-
         // const addresses = await contract.enter(ADDRESSES[0])
 
 

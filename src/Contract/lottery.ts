@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import CONTRACT_ABI from './CONTRACT_ABI'
-import {AbiItem} from "web3-utils";
+import {AbiItem} from "web3-utils"
+import CHAIN_LIST from './ChainId'
 
 export interface LotteryInterface {
   web3: any,
@@ -14,12 +15,14 @@ export interface LotteryInterface {
   getBalance(address: string): Promise<string>,
   getNetwork(): Promise<string>,
   getAddress(): Promise<string>,
+  getNetworkFromWallet(): Promise<string>,
 }
 
-// export const CONTRACT_ADDRESS = '0x4882aaF6E8961D5A7D8f9Cd01D4AC86A9a1b1D4f'
-export const CONTRACT_ADDRESS = '0x0fA93117c229f2Fb838C115C0Ae0C708838c2465'
+export const CONTRACT_ADDRESS = '0x883Bb29a36Cc585950ddda24a9DB64B2f8E32a9f'
+// Manager Address:
+// 0xEDf416faD4E1dc3E8B49ca82cB389D7F76E09b0A
 
-export default class LotteryContract implements LotteryInterface{
+export default class LotteryContract implements LotteryInterface {
   web3
   contract
   contractAddress = CONTRACT_ADDRESS
@@ -28,6 +31,15 @@ export default class LotteryContract implements LotteryInterface{
   constructor(ethereum: any) {
     this.web3 = new Web3(ethereum)
     this.contract = new this.web3.eth.Contract(this.contractAbi, this.contractAddress)
+
+    // @ts-ignore
+    // window.ethereum.on('accountsChanged', function () {
+    //   console.log('this is working')
+    // })
+  }
+
+  async getNetwork() {
+    return this.contract.methods.network().call()
   }
 
   async getManager() {
@@ -54,7 +66,6 @@ export default class LotteryContract implements LotteryInterface{
   }
 
   async getBalance(address: string) {
-    console.log('getBalance:', address)
     const wei = await this.web3.eth.getBalance(address)
     return this.web3.utils.fromWei(wei, 'ether')
   }
@@ -65,7 +76,9 @@ export default class LotteryContract implements LotteryInterface{
     return address[0]
   }
 
-  async getNetwork() {
-    return this.web3.eth.net.getNetworkType()
+  async getNetworkFromWallet() {
+    const id = await this.web3.eth.net.getId()
+    const network = CHAIN_LIST.find((obj) => obj.chain_id === id)
+    return network ? network.network_name : ''
   }
 }
